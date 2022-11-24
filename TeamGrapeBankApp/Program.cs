@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TeamGrapeBankApp
 {
@@ -6,7 +8,8 @@ namespace TeamGrapeBankApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            //Run login method
+            User.Login();
         }
     }
 }
