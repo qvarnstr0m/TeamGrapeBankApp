@@ -78,7 +78,7 @@ namespace TeamGrapeBankApp
             }
             else if (loginSuccess == true && userTryLogin is Customer)
             {
-                Console.WriteLine($"{userTryLogin.Username} is logged in as Customer");
+                Customer.CustomerMenu(userTryLogin);
             }
             else
             {
