@@ -8,8 +8,11 @@ namespace TeamGrapeBankApp
     {
         static void Main(string[] args)
         {
+            //Generates bankaccounts for users
+            BankAccount.GenerateBankAccounts();
             //Run login method
             User.Login();
+            
         }
     }
 }
