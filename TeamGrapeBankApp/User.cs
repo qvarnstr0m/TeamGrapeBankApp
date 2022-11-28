@@ -45,6 +45,7 @@ namespace TeamGrapeBankApp
 
             //Welcome message and login logic
             //Loop while entered username doesnt exist
+            Console.Clear();
             Console.WriteLine("Welcome the the bank\n");
             string enteredUsername;
             do
