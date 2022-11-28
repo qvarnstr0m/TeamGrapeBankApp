@@ -61,6 +61,15 @@ namespace TeamGrapeBankApp
             int id = User.userList.Last().Id + 1;
             Console.Write("Enter a unique username: ");
             string username = Console.ReadLine();
+            //Checks userList if username already exists and saves it as a bool
+            bool existing = userList.Any(x => x.Username == username);
+            while (existing)
+            {
+                Console.Write("Username already exists, try a different one: ");
+                username = Console.ReadLine();
+                existing = userList.Any(x => x.Username == username);
+            }
+            
             Console.Write("Enter a password: ");
             string password = Console.ReadLine();
             Console.Write("Enter customer first name: ");
