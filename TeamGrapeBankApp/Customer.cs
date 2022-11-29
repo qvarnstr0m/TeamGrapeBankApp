@@ -10,10 +10,10 @@ namespace TeamGrapeBankApp
         public string Adress { get; set; }
         public string Email { get; set; }
         public string Phonenumber { get; set; }
-        public bool LockedOut { get; set; }
+        
 
         //Constructor
-        public Customer(int id, string username, string password, string firstname, string lastname, string adress, string email, string phonenumber, bool lockedOut) : base(id, username, password, firstname, lastname)
+        public Customer(int id, string username, string password, string firstname, string lastname, string adress, string email, string phonenumber, bool lockedOut) : base(id, username, password, firstname, lastname, lockedOut)
         {
             Id = id;
             Firstname = firstname;
@@ -21,7 +21,6 @@ namespace TeamGrapeBankApp
             Adress = adress;
             Email = email;
             Phonenumber = phonenumber;
-            LockedOut = lockedOut;
         }
 
         //Override ToString method
@@ -54,7 +53,9 @@ namespace TeamGrapeBankApp
                     CustomerMenu(loggedInCustomer);
                     break;
                 case 2:
-                    Console.WriteLine("Log out");
+                    Console.WriteLine("Press a key to return to login menu");
+                    Console.ReadKey();
+                    User.Login();
                     break;
 
                 default:

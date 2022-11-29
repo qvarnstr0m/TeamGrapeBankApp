@@ -8,7 +8,7 @@ namespace TeamGrapeBankApp
     internal class Admin : User
     {
         //Constructor
-        public Admin(int id, string username, string password, string firstname, string lastname) : base(id, username, password, firstname, lastname)
+        public Admin(int id, string username, string password, string firstname, string lastname, bool lockedOut) : base(id, username, password, firstname, lastname, lockedOut)
         {
             Id = id;
             Username = username;
