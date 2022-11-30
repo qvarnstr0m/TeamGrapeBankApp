@@ -131,8 +131,14 @@ namespace TeamGrapeBankApp
             }
             BankAccount AccountTo = userBankaccount.Find(x => x.AccountNumber == AccountNumberTo);
 
-            Console.WriteLine("How much money do you want to move? ");
-            decimal AmmountMove = Convert.ToDecimal(Console.ReadLine());
+            bool parseSuccess;
+            decimal AmmountMove;
+            do {
+
+                Console.WriteLine("How much money do you want to move? ");
+                parseSuccess = decimal.TryParse(Console.ReadLine(), out AmmountMove);
+            } while (!parseSuccess);
+           
 
 
             if (AmmountMove > AccountFrom.Balance)
