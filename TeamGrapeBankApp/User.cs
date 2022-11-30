@@ -13,38 +13,44 @@ namespace TeamGrapeBankApp
         public string Password { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
+        public bool LockedOut { get; set; }
 
         //List to hold users
         public static List<User> userList = new List<User>();
 
         //Constructor
-        public User(int id, string username, string password, string firstname, string lastname)
+        public User(int id, string username, string password, string firstname, string lastname, bool lockedOut)
         {
             Id = id;
             Username = username;
             Password = password;
             Firstname = firstname;
             Lastname = lastname;
+            LockedOut = lockedOut;
         }
-
-        //Method to login user
-        internal static void Login()
+        internal static void GenerateUsers()
         {
             //Create User objects as Admin and Customers and add to list
             //This should be handled by a database in the future
             User sven = new Customer(1, "billgates", "pass1", "Bill", "Gates", "Nygatan 26 31176 Falkenberg", "bill@microsoft.se", "+46702222222", false);
             User anna = new Customer(2, "annasvensson", "pass2", "Anna", "Svensson", "Nygatan 26 31176 Falkenberg", "anna@svensson.se", "+46703333333", false);
             User hermes = new Customer(3, "hermessaliba", "pass3", "Hermes", "Saliba", "Nygatan 28 31176 Falkenberg", "hermes@gmail.com", "+46704444444", false);
-            User admin = new Admin(4, "admin", "pass", "Anas", "Qlok");
+            User admin = new Admin(4, "admin", "pass", "Anas", "Qlok", false);
 
-            
+
             userList.Add(sven);
             userList.Add(anna);
             userList.Add(hermes);
             userList.Add(admin);
+        }
+        //Method to login user
+        internal static void Login()
+        {
+            
 
             //Welcome message and login logic
             //Loop while entered username doesnt exist
+            Console.Clear();
             Console.WriteLine("Welcome the the bank\n");
             string enteredUsername;
             do
@@ -55,7 +61,13 @@ namespace TeamGrapeBankApp
 
             //Store found user in userTryLogin
             User userTryLogin = userList.Find(x => x.Username == enteredUsername);
-
+            //Check if user is locked
+            if (userTryLogin.LockedOut == true)
+            {
+                Console.WriteLine($"{userTryLogin.Username} is currently locked out, please contact admin to unlock it. Please press a key to return to login menu.");
+                Console.ReadKey();
+                Login();
+            }
             //Loop while there are logintries left or login is not successful
             int loginTries = 3;
             bool loginSuccess = false;
@@ -82,7 +94,10 @@ namespace TeamGrapeBankApp
             }
             else
             {
-                Console.WriteLine($"User {userTryLogin.Username} is locked from login");
+                Console.WriteLine($"User {userTryLogin.Username} is locked from login, press a key to return to login menu");
+                userTryLogin.LockedOut = true;
+                Console.ReadKey();
+                Login();
             }
         }
     }

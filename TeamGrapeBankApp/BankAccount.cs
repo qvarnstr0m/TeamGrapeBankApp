@@ -63,6 +63,7 @@ namespace TeamGrapeBankApp
             Console.WriteLine("All accounts listed, please press a key to return to menu");
             Console.ReadKey();
         }
+
         //Method to open a new account
         public static void OpenNewAccount(User loggedInCustomer)
         {
@@ -83,6 +84,73 @@ namespace TeamGrapeBankApp
             Console.WriteLine("Account succesfully created: " + "\n" + newBankAccount + "\n");
             Console.WriteLine("Press any key to return to menu...");
             Console.ReadKey();
+        }
+
+        public static void internalTransaction(string username)
+        {
+
+            //Write out the accounts
+            Console.Clear();
+            Console.WriteLine("Bankaccounts");
+            List<BankAccount> userBankaccount = bankAccounts.FindAll(x => x.Owner == username);
+
+            foreach (BankAccount b in userBankaccount)
+            {
+                Console.WriteLine(b);
+            }
+            //Ask for input 
+           Console.WriteLine("What account do you want to move money from? ");
+           string AccountNumberFrom = Console.ReadLine();
+          
+            
+            if(!userBankaccount.Exists(x => x.AccountNumber == AccountNumberFrom))
+            {
+                Console.WriteLine("Account does not exsist! ");
+                Console.ReadKey();
+                return;
+
+            }
+            BankAccount AccountFrom = userBankaccount.Find(x => x.AccountNumber == AccountNumberFrom);
+
+
+
+            Console.WriteLine("What account do you want to move money to? ");
+            string AccountNumberTo =Console.ReadLine();
+
+            if (!userBankaccount.Exists(x => x.AccountNumber == AccountNumberTo))
+            {
+                Console.WriteLine("Account does not exsist! ");
+                Console.ReadKey();
+                return;
+
+            }
+            BankAccount AccountTo = userBankaccount.Find(x => x.AccountNumber == AccountNumberTo);
+
+            Console.WriteLine("How much money do you want to move? ");
+            decimal AmmountMove = Convert.ToDecimal(Console.ReadLine());
+
+
+            if (AmmountMove > AccountFrom.Balance)
+            {
+
+                Console.WriteLine("Not enough money on account.... ");
+                Console.ReadKey();
+                return; //Can call on method internalTrancactions again..
+            }
+
+
+            AccountFrom.Balance -= AmmountMove;
+            AccountTo.Balance += AmmountMove;
+
+
+            foreach (BankAccount b in userBankaccount)
+            {
+                Console.WriteLine(b);
+            }
+            Console.WriteLine("Press any key to return to menu ");
+            Console.ReadKey();
+
+
         }
 
     }

@@ -8,7 +8,7 @@ namespace TeamGrapeBankApp
     internal class Admin : User
     {
         //Constructor
-        public Admin(int id, string username, string password, string firstname, string lastname) : base(id, username, password, firstname, lastname)
+        public Admin(int id, string username, string password, string firstname, string lastname, bool lockedOut) : base(id, username, password, firstname, lastname, lockedOut)
         {
             Id = id;
             Username = username;
@@ -17,6 +17,12 @@ namespace TeamGrapeBankApp
             Lastname = lastname;
         }
 
+        //Dictionary to hold SEK to different currencies exchange rates, should change to DB, JSON or dynamic later
+        private static Dictionary<string, decimal> currencyDict = new Dictionary<string, decimal>()
+        {
+            {"USD", 12.1m }
+        };
+
         //Admin menu method
         internal static void AdminMenu(User loggedInAdmin)
         {
@@ -24,7 +30,8 @@ namespace TeamGrapeBankApp
             Console.WriteLine($"Welcome {loggedInAdmin.Firstname}\n");
             Console.WriteLine("Menu:");
             Console.WriteLine("1. Add a customer account");
-            Console.WriteLine("2. Log out");
+            Console.WriteLine("2. Set a new currency exchange rate");
+            Console.WriteLine("3. Log out");
 
             bool parseSuccess;
             int userChoice;
@@ -41,7 +48,13 @@ namespace TeamGrapeBankApp
                     AdminMenu(loggedInAdmin);
                     break;
                 case 2:
-                    Console.WriteLine("Log out");
+                    SetExchangeRates();
+                    AdminMenu(loggedInAdmin);
+                    break;
+                case 3:
+                    Console.WriteLine("Press a key to return to the login menu");
+                    Console.ReadKey();
+                    User.Login();
                     break;
 
                 default:
@@ -61,6 +74,15 @@ namespace TeamGrapeBankApp
             int id = User.userList.Last().Id + 1;
             Console.Write("Enter a unique username: ");
             string username = Console.ReadLine();
+            //Checks userList if username already exists and saves it as a bool
+            bool existing = userList.Any(x => x.Username == username);
+            while (existing)
+            {
+                Console.Write("Username already exists, try a different one: ");
+                username = Console.ReadLine();
+                existing = userList.Any(x => x.Username == username);
+            }
+            
             Console.Write("Enter a password: ");
             string password = Console.ReadLine();
             Console.Write("Enter customer first name: ");
@@ -95,6 +117,43 @@ namespace TeamGrapeBankApp
             else
             {
                 Console.WriteLine("Customer not added. Press a key to return to the menu");
+                Console.ReadKey();
+            }
+        }
+
+        //Method for admin to set current exchange rates between different currencies
+        private static void SetExchangeRates()
+        {
+            Console.Clear();
+            Console.WriteLine("Available currencies:\n");
+            foreach (var item in currencyDict)
+            {
+                Console.WriteLine($"Currency: {item.Key}\nCurrent rate: {item.Value}\n");
+            }
+
+            string adminChoice;
+            do
+            {
+                Console.Write("Enter a currency to update or \"0\" to return to the main menu: ");
+                adminChoice = Console.ReadLine().ToUpper();
+            } while (adminChoice != "0" && !currencyDict.ContainsKey(adminChoice));
+
+            if (adminChoice == "0")
+            {
+                Console.WriteLine("Press a key to return to main menu");
+                Console.ReadKey();
+            }
+            else
+            {
+                bool parseSuccess;
+                decimal newRate;
+                do
+                {
+                    Console.Write($"Enter new rate for {adminChoice}: ");
+                    parseSuccess = decimal.TryParse(Console.ReadLine(), out newRate);
+                } while (!parseSuccess);
+                currencyDict[adminChoice] = newRate;
+                Console.WriteLine($"New rate for {adminChoice}: {newRate}\nPress a key to return to main menu");
                 Console.ReadKey();
             }
         }

@@ -10,10 +10,10 @@ namespace TeamGrapeBankApp
         public string Adress { get; set; }
         public string Email { get; set; }
         public string Phonenumber { get; set; }
-        public bool LockedOut { get; set; }
+        
 
         //Constructor
-        public Customer(int id, string username, string password, string firstname, string lastname, string adress, string email, string phonenumber, bool lockedOut) : base(id, username, password, firstname, lastname)
+        public Customer(int id, string username, string password, string firstname, string lastname, string adress, string email, string phonenumber, bool lockedOut) : base(id, username, password, firstname, lastname, lockedOut)
         {
             Id = id;
             Firstname = firstname;
@@ -21,7 +21,6 @@ namespace TeamGrapeBankApp
             Adress = adress;
             Email = email;
             Phonenumber = phonenumber;
-            LockedOut = lockedOut;
         }
 
         //Override ToString method
@@ -38,7 +37,8 @@ namespace TeamGrapeBankApp
             Console.WriteLine("Menu:");
             Console.WriteLine("1. List your bankaccounts");
             Console.WriteLine("2. Open a new bank account");
-            Console.WriteLine("3. Log out");
+            Console.WriteLine("3. Transfer between accounts");
+            Console.WriteLine("4.Log out");
 
             bool parseSuccess;
             int userChoice;
@@ -58,8 +58,16 @@ namespace TeamGrapeBankApp
                     BankAccount.OpenNewAccount(loggedInCustomer);
                     CustomerMenu(loggedInCustomer);
                     break;
+                    
                 case 3:
+                    BankAccount.internalTransaction(loggedInCustomer.Username);
+                    CustomerMenu(loggedInCustomer);
+                    break;
+                case 4:
                     Console.WriteLine("Log out");
+                    Console.WriteLine("Press a key to return to login menu");
+                    Console.ReadKey();
+                    User.Login();
                     break;
 
                 default:
