@@ -64,6 +64,28 @@ namespace TeamGrapeBankApp
             Console.ReadKey();
         }
 
+        //Method to open a new account
+        public static void OpenNewAccount(User loggedInCustomer)
+        {
+            Console.Clear();
+            Console.Write("Enter username: ");
+            string owner = Console.ReadLine();
+            Console.Write("Enter account name: ");
+            string accountName = Console.ReadLine();
+            Console.Write("Enter account number: ");
+            string accountNumber = Console.ReadLine();
+            Console.Write("Enter currency: ");
+            string currency = Console.ReadLine();
+            Console.Write("Enter balance : ");
+            decimal balance = decimal.Parse(Console.ReadLine());
+            
+            BankAccount newBankAccount = new BankAccount(accountNumber, owner, currency, balance);
+            BankAccount.bankAccounts.Add(newBankAccount);
+            Console.WriteLine("Account succesfully created: " + "\n" + newBankAccount + "\n");
+            Console.WriteLine("Press any key to return to menu...");
+            Console.ReadKey();
+        }
+
         public static void internalTransaction(string username)
         {
 
@@ -130,5 +152,7 @@ namespace TeamGrapeBankApp
 
 
         }
+
     }
+         
 }
