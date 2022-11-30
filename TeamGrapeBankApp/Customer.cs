@@ -37,6 +37,7 @@ namespace TeamGrapeBankApp
             Console.WriteLine("Menu:");
             Console.WriteLine("1. List your bankaccounts");
             Console.WriteLine("2. Log out");
+            Console.WriteLine("3. Transfer between accounts");
 
             bool parseSuccess;
             int userChoice;
@@ -56,6 +57,11 @@ namespace TeamGrapeBankApp
                     Console.WriteLine("Press a key to return to login menu");
                     Console.ReadKey();
                     User.Login();
+                    break;
+
+                case 3:
+                    BankAccount.internalTransaction(loggedInCustomer.Username);
+                    CustomerMenu(loggedInCustomer);
                     break;
 
                 default:
