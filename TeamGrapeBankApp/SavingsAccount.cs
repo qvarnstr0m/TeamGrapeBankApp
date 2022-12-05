@@ -10,9 +10,14 @@ namespace TeamGrapeBankApp
         public decimal Interest { get; set; }
 
         //Constructor
-        public SavingsAccount(string accountNumber, string owner, string currency, decimal balance, decimal interest) : base(accountNumber, owner, currency, balance)
+        public SavingsAccount(string accountName, string accountNumber, string owner, string currency, decimal balance, decimal interest) : base(accountName, accountNumber, owner, currency, balance)
         {
             Interest = interest;
+        }
+
+        public override string ToString()
+        {
+            return $"AccountName: {AccountName}\nAccountnumber: {AccountNumber}\nBalance: {RoundTwoDecimals(Balance)}{Currency}\n";
         }
 
         //List to hold savings accounts
@@ -22,9 +27,9 @@ namespace TeamGrapeBankApp
         public static void GenerateSavingsAccounts()
         {
             //Hardcode saving accounts and add to list (should change to database later)
-            SavingsAccount Acc1 = new SavingsAccount("1234-1234", "billgates", "SEK", 1000.345m, Admin.savingsDict[12]);
-            SavingsAccount Acc2 = new SavingsAccount("5555-1234", "annasvensson", "SEK", 145000, Admin.savingsDict[12]);
-            SavingsAccount Acc3 = new SavingsAccount("5555-0000", "hermessaliba", "SEK", 7445.43m, Admin.savingsDict[12]);
+            SavingsAccount Acc1 = new SavingsAccount("Car account", "1234-1234", "billgates", "SEK", 1000.345m, Admin.savingsDict[12]);
+            SavingsAccount Acc2 = new SavingsAccount("Vacation account","5555-1234", "annasvensson", "SEK", 145000, Admin.savingsDict[12]);
+            SavingsAccount Acc3 = new SavingsAccount("Emergency savings","5555-0000", "hermessaliba", "SEK", 7445.43m, Admin.savingsDict[12]);
 
             savingsAccounts.Add(Acc1);
             savingsAccounts.Add(Acc2);
@@ -37,6 +42,10 @@ namespace TeamGrapeBankApp
             Console.Clear();
 
             Console.WriteLine("Open a new savings account\n");
+
+            //Get user input for name of the account
+            Console.Write("Enter name of your new account: ");
+            string accountName = Console.ReadLine();
 
             //Get user input for type of account
             Console.WriteLine("The current rates are:");
@@ -74,10 +83,10 @@ namespace TeamGrapeBankApp
                 parseSuccessAmount = decimal.TryParse(Console.ReadLine(), out userInputAmount);
             } while (!parseSuccessAmount || userInputAmount < 0);
 
-            string accountNumber = "1232-3211";
+            string accountNumber = GenerateAccountNumber();
 
             //Create a new instance of SavingsAccount and add to list
-            savingsAccounts.Add(new SavingsAccount(accountNumber, loggedInCustomer.Username, userInputCurrency, userInputAmount, Admin.savingsDict[userInputType]));
+            savingsAccounts.Add(new SavingsAccount(accountName, accountNumber, loggedInCustomer.Username, userInputCurrency, userInputAmount, Admin.savingsDict[userInputType]));
 
             Console.WriteLine($"\nCongratulations! You just opened a new savings account that will generate {RoundTwoDecimals(userInputAmount * Admin.savingsDict[userInputType] - userInputAmount)} " +
                 $"{userInputCurrency} every {userInputType} months\n\nPress a key to return to main menu");
@@ -115,13 +124,6 @@ namespace TeamGrapeBankApp
                 }
             }
             return null;
-        }
-
-        //Method to show decimal numbers rounded to two decimals without changing the accual input
-        internal static string RoundTwoDecimals(decimal input)
-        {
-            //decimal roundedDecimal = Math.Round(input, 2);
-            return Math.Round(input, 2).ToString("0.00");
         }
     }
 }
