@@ -12,9 +12,10 @@ namespace TeamGrapeBankApp
             User.GenerateUsers();
             //Generates bankaccounts for users
             BankAccount.GenerateBankAccounts();
+            //Generate saving accounts for users
+            SavingsAccount.GenerateSavingsAccounts();
             //Run login method
             User.Login();
-            
         }
     }
 }
