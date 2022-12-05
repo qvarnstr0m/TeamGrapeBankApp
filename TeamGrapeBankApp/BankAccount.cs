@@ -30,7 +30,7 @@ namespace TeamGrapeBankApp
             //Hardcode some bankaccounts and adds them to list (should change to database later)
             BankAccount Acc1 = new BankAccount("Salary Account","4444-5555", "billgates", "SEK", 1000000.345m);
             BankAccount Acc2 = new BankAccount("Bills","4444-3577", "billgates", "SEK", 50043);
-            BankAccount Acc3 = new BankAccount("Third Account","4444-2644", "billgates", "SEK", 3205);
+            BankAccount Acc3 = new BankAccount("For Emergency","4444-2644", "billgates", "SEK", 3205);
 
             BankAccount Acc4 = new BankAccount("Salary Account","5555-2644", "annasvensson", "SEK", 45000);
             BankAccount Acc5 = new BankAccount("Bills","5555-1533", "annasvensson", "SEK", 2300);
@@ -49,7 +49,7 @@ namespace TeamGrapeBankApp
 
         public override string ToString()
         {
-            return $"AccountName: {AccountName}\nAccountnumber: {AccountNumber}\nBalance: {Balance}{Currency}\n";
+            return $"AccountName: {AccountName}\nAccountnumber: {AccountNumber}\nBalance: {RoundTwoDecimals(Balance)}{Currency}\n";
         }
 
         public static void ListBankaccounts(string username)
@@ -64,6 +64,15 @@ namespace TeamGrapeBankApp
                 Console.WriteLine(b);
             }
 
+            List<SavingsAccount> userSavingsAccount = SavingsAccount.savingsAccounts.FindAll(x => x.Owner == username);
+            if(userSavingsAccount.Count() > 0)
+            {
+                Console.WriteLine("Savingsaccount");
+                foreach(SavingsAccount h in userSavingsAccount)
+                {
+                    Console.WriteLine(h);
+                }
+            }
             Console.WriteLine("All accounts listed, please press a key to return to menu");
             Console.ReadKey();
         }
@@ -106,7 +115,7 @@ namespace TeamGrapeBankApp
                 int randAccount2 = ranAccount2.Next(9999);
                 newAccountNumber = randAccount.ToString() + "-" + randAccount2.ToString();
             }
-            while (BankAccount.bankAccounts.Any(x => x.AccountNumber == newAccountNumber));
+            while (BankAccount.bankAccounts.Any(x => x.AccountNumber == newAccountNumber) && SavingsAccount.savingsAccounts.Any(x => x.AccountNumber == newAccountNumber));
 
             return newAccountNumber;
         }
@@ -200,6 +209,13 @@ namespace TeamGrapeBankApp
             }
             Console.WriteLine("Press any key to return to menu ");
             Console.ReadKey();
+        }
+
+        //Method to show decimal numbers rounded to two decimals without changing the accual input
+        internal static string RoundTwoDecimals(decimal input)
+        {
+            //decimal roundedDecimal = Math.Round(input, 2);
+            return Math.Round(input, 2).ToString("0.00");
         }
 
     }
