@@ -149,10 +149,30 @@ namespace TeamGrapeBankApp
                 return; //Can call on method internalTrancactions again..
             }
 
-
-            AccountFrom.Balance -= AmmountMove;
-            AccountTo.Balance += AmmountMove;
-
+            //Logic to handle same and different currency transfers
+            if (AccountFrom.Currency == AccountTo.Currency)
+            {
+                AccountFrom.Balance -= AmmountMove;
+                AccountTo.Balance += AmmountMove;
+                Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber}");
+            }
+            else
+            {
+                if (AccountFrom.Currency == "SEK")
+                {
+                    AccountFrom.Balance -= AmmountMove;
+                    AccountTo.Balance += AmmountMove / Admin.currencyDict[AccountTo.Currency];
+                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber} " +
+                        $"at the exchange rate 1 / {Admin.currencyDict[AccountTo.Currency]}");
+                }
+                else
+                {
+                    AccountFrom.Balance -= AmmountMove;
+                    AccountTo.Balance += AmmountMove * Admin.currencyDict[AccountFrom.Currency];
+                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber} " +
+                        $"at the exchange rate 1 * {Admin.currencyDict[AccountFrom.Currency]}");
+                }
+            }
 
             foreach (BankAccount b in userBankaccount)
             {
@@ -160,8 +180,6 @@ namespace TeamGrapeBankApp
             }
             Console.WriteLine("Press any key to return to menu ");
             Console.ReadKey();
-
-
         }
 
     }

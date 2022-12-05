@@ -18,9 +18,17 @@ namespace TeamGrapeBankApp
         }
 
         //Dictionary to hold SEK to different currencies exchange rates, should change to DB, JSON or dynamic later
-        private static Dictionary<string, decimal> currencyDict = new Dictionary<string, decimal>()
+        internal static Dictionary<string, decimal> currencyDict = new Dictionary<string, decimal>()
         {
+            {"SEK", 1m }, //Do not change
             {"USD", 12.1m }
+        };
+
+        //Dictionary to hold saving account rates, Key = months balance is locked from withdrawals
+        internal static Dictionary<int, decimal> savingsDict = new Dictionary<int, decimal>()
+        {
+            {12, 1.0150m },
+            {6, 1.0050m }
         };
 
         //Admin menu method
