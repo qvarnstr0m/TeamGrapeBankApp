@@ -81,23 +81,37 @@ namespace TeamGrapeBankApp
         public static void OpenNewAccount(User loggedInCustomer)
         {
             Console.Clear();
-            
+
+            Console.WriteLine("Open a new bank account\n");
+
             string accountNumber;
             accountNumber = GenerateAccountNumber();
+
             Console.Write("Enter account name: ");
             string accountName = Console.ReadLine();
-            Console.Write("Enter currency: ");
-            string currency = Console.ReadLine();
+
+            Console.WriteLine("\nThe available currencies are:");
+            foreach (var item in Admin.currencyDict)
+            {
+                Console.WriteLine(item.Key);
+            }
+            string userInputCurrency;
+            do
+            {
+                Console.Write("Enter a valid currency: ");
+                userInputCurrency = Console.ReadLine().ToUpper();
+            } while (!Admin.currencyDict.ContainsKey(userInputCurrency));
+
             bool parseSuccess;
             decimal balance;
             do
             {
-                Console.Write("Enter balance : ");
+                Console.Write("Enter amount to deposit: ");
                 parseSuccess = decimal.TryParse(Console.ReadLine(), out balance);
-            } while (!parseSuccess);
+            } while (!parseSuccess || balance < 0);
           
             
-            BankAccount newBankAccount = new BankAccount(accountName, accountNumber, loggedInCustomer.Username, currency, balance);
+            BankAccount newBankAccount = new BankAccount(accountName, accountNumber, loggedInCustomer.Username, userInputCurrency, balance);
             BankAccount.bankAccounts.Add(newBankAccount);
             Console.WriteLine("Account succesfully created: " + "\n" + newBankAccount + "\n");
             Console.WriteLine("Press any key to return to menu...");

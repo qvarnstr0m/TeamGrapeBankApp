@@ -39,7 +39,7 @@ namespace TeamGrapeBankApp
             Console.WriteLine("2. Open a new bank account");
             Console.WriteLine("3. Transfer between accounts");
             Console.WriteLine("4. Open a new savings account");
-            Console.WriteLine("5.Log out");
+            Console.WriteLine("5. Log out");
 
             bool parseSuccess;
             int userChoice;
