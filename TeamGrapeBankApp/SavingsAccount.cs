@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Timers;
 
 namespace TeamGrapeBankApp
 {
@@ -124,6 +126,18 @@ namespace TeamGrapeBankApp
                 }
             }
             return null;
+        }
+
+        //Method to once a month update each savingsaccount in list with new balance
+        internal static void UpdateSavingsAccounts()
+        {
+            if (DateTime.Today.Day == 1)
+            {
+                foreach (SavingsAccount item in savingsAccounts)
+                {
+                    item.Balance = item.Balance * item.Interest;
+                }
+            }
         }
     }
 }
