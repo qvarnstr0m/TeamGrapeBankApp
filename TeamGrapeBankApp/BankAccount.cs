@@ -166,7 +166,7 @@ namespace TeamGrapeBankApp
 
                 Console.WriteLine("How much money do you want to move? ");
                 parseSuccess = decimal.TryParse(Console.ReadLine(), out AmmountMove);
-            } while (!parseSuccess);
+            } while (!parseSuccess || AmmountMove < 0);
            
             if (AmmountMove > AccountFrom.Balance)
             {
