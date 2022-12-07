@@ -9,11 +9,11 @@ namespace TeamGrapeBankApp
 {
     internal class BankAccount
     {
-        protected string AccountName { get; set; }
-        protected string AccountNumber { get; set; }
-        protected string Owner  { get; set; }
-        protected string Currency { get; set; }
-        protected decimal Balance { get; set; }
+        public string AccountName { get; set; }
+        public string AccountNumber { get; set; }
+        public string Owner  { get; set; }
+        public string Currency { get; set; }
+        public decimal Balance { get; set; }
 
         public static List<BankAccount> bankAccounts = new List<BankAccount>();
         public BankAccount(string accountName, string accountNumber, string owner, string currency, decimal balance)
@@ -67,10 +67,20 @@ namespace TeamGrapeBankApp
             List<SavingsAccount> userSavingsAccount = SavingsAccount.savingsAccounts.FindAll(x => x.Owner == username);
             if(userSavingsAccount.Count() > 0)
             {
-                Console.WriteLine("Savingsaccount");
+                Console.WriteLine("Savingsaccounts");
                 foreach(SavingsAccount h in userSavingsAccount)
                 {
                     Console.WriteLine(h);
+                }
+            }
+
+            List<LoanAccount> userLoanAccount = LoanAccount.loanAccounts.FindAll(x => x.Owner == username);
+            if (userLoanAccount.Count() > 0)
+            {
+                Console.WriteLine("Loan accounts");
+                foreach (LoanAccount j in userLoanAccount)
+                {
+                    Console.WriteLine(j);
                 }
             }
             Console.WriteLine("All accounts listed, please press a key to return to menu");
