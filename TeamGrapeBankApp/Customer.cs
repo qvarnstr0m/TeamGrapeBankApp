@@ -38,7 +38,8 @@ namespace TeamGrapeBankApp
             Console.WriteLine("1. List your bankaccounts");
             Console.WriteLine("2. Open a new bank account");
             Console.WriteLine("3. Transfer between accounts");
-            Console.WriteLine("4.Log out");
+            Console.WriteLine("4. Open a new savings account");
+            Console.WriteLine("5. Log out");
 
             bool parseSuccess;
             int userChoice;
@@ -64,6 +65,10 @@ namespace TeamGrapeBankApp
                     CustomerMenu(loggedInCustomer);
                     break;
                 case 4:
+                    SavingsAccount.OpenNewSavingsAccount(loggedInCustomer);
+                    CustomerMenu(loggedInCustomer);
+                    break;
+                case 5:
                     Console.WriteLine("Log out");
                     Console.WriteLine("Press a key to return to login menu");
                     Console.ReadKey();
