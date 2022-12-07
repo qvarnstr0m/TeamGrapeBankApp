@@ -170,7 +170,6 @@ namespace TeamGrapeBankApp
            
             if (AmmountMove > AccountFrom.Balance)
             {
-
                 Console.WriteLine("Not enough money on account.... ");
                 Console.ReadKey();
                 return; //Can call on method internalTrancactions again..
@@ -183,6 +182,7 @@ namespace TeamGrapeBankApp
                 AccountTo.Balance += AmmountMove;
                 Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber}");
             }
+
             else
             {
                 if (AccountFrom.Currency == "SEK")
@@ -200,7 +200,6 @@ namespace TeamGrapeBankApp
                         $"at the exchange rate 1 * {Admin.currencyDict[AccountFrom.Currency]}");
                 }
             }
-
 
             foreach (BankAccount b in userBankaccount)
             {
