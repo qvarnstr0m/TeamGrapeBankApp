@@ -31,6 +31,13 @@ namespace TeamGrapeBankApp
             {6, 1.0050m }
         };
 
+        //Dictionary to hold interest rate for loan accounts,
+        internal static Dictionary<int, decimal> interestDict = new Dictionary<int, decimal>()
+        {
+            {24, 1.0500m },
+            {36, 1.0600m},
+        };
+
         //Admin menu method
         internal static void AdminMenu(User loggedInAdmin)
         {
