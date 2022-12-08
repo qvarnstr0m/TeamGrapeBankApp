@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
-using System.Timers;
 
 namespace TeamGrapeBankApp
 {
     internal class SavingsAccount : BankAccount
     {
-        //Properties
         public decimal Interest { get; set; }
 
-        //Constructor
         public SavingsAccount(string accountName, string accountNumber, string owner, string currency, decimal balance, decimal interest) : base(accountName, accountNumber, owner, currency, balance)
         {
             Interest = interest;
@@ -22,13 +18,12 @@ namespace TeamGrapeBankApp
             return $"AccountName: {AccountName}\nAccountnumber: {AccountNumber}\nBalance: {RoundTwoDecimals(Balance)}{Currency}\n";
         }
 
-        //List to hold savings accounts
+        //List to hold customers savings accounts
         public static List<SavingsAccount> savingsAccounts = new List<SavingsAccount>();
 
-
+        //Method to generate saving accounts and add to list (should change to database later)
         public static void GenerateSavingsAccounts()
         {
-            //Hardcode saving accounts and add to list (should change to database later)
             SavingsAccount Acc1 = new SavingsAccount("Car account", "1234-1234", "billgates", "SEK", 1000.345m, Admin.savingsDict[12]);
             SavingsAccount Acc2 = new SavingsAccount("Vacation account","5555-1234", "annasvensson", "SEK", 145000, Admin.savingsDict[12]);
             SavingsAccount Acc3 = new SavingsAccount("Emergency savings","5555-0000", "hermessaliba", "SEK", 7445.43m, Admin.savingsDict[12]);

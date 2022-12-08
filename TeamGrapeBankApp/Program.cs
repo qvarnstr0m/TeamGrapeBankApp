@@ -33,6 +33,7 @@ namespace TeamGrapeBankApp
         internal static void OnTimedEvent(object source, ElapsedEventArgs e)
         {
             SavingsAccount.UpdateSavingsAccounts();
+            LoanAccount.UpdateLoanAccounts();
         }
     }
 }
