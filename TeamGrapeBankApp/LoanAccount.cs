@@ -7,22 +7,37 @@ namespace TeamGrapeBankApp
 {
     internal class LoanAccount : BankAccount
     {
+        //Properties
         public decimal Interest { get; set; }
-        public decimal Limit { get; set; }
 
-        public LoanAccount(string accountName, string accountNumber, string owner, string currency, decimal balance, decimal interest, decimal limit) : base(accountName, accountNumber, owner, currency, balance)
+        //List to hold loan accounts
+        public static List<LoanAccount> loanAccounts = new List<LoanAccount>();
+
+        //Constructor
+        public LoanAccount(string accountName, string accountNumber, string owner, string currency, decimal balance, decimal interest) : base(accountName, accountNumber, owner, currency, balance)
         {
             Interest = interest;
-            Limit = limit;
         }
 
+        //Overide ToString method
         public override string ToString()
         {
             return $"AccountName: {AccountName}\nAccountnumber: {AccountNumber}\nBalance: -{RoundTwoDecimals(Balance)}{Currency}\n";
         }
 
-        public static List<LoanAccount> loanAccounts = new List<LoanAccount>();
+        public static void GenerateLoanAccounts()
+        {
+            //Hardcode loan accounts and add to list (should change to database later)
+            LoanAccount Acc1 = new LoanAccount("Morgage", "1234-1234", "billgates", "SEK", 1350000.345m, Admin.interestDict[24]);
+            LoanAccount Acc2 = new LoanAccount("Car loan", "5555-1234", "annasvensson", "SEK", 245000, Admin.interestDict[36]);
+            LoanAccount Acc3 = new LoanAccount("Loan to party", "5555-0000", "hermessaliba", "SEK", 7000.43m, Admin.interestDict[24]);
 
+            loanAccounts.Add(Acc1);
+            loanAccounts.Add(Acc2);
+            loanAccounts.Add(Acc3);
+        }
+
+        //Method for customer to take out a loan
         internal static void TakeLoan(User loggedInCustomer)
         {
             Console.Clear();
@@ -49,17 +64,18 @@ namespace TeamGrapeBankApp
 
             bool parseSuccessAmount = false;
             decimal userInputAmount;
+            decimal maxLoanAmount = LoanLimit(loggedInCustomer);
             do
             {
                 Console.Write($"Enter a valid amount to loan in SEK: (Max amount: {RoundTwoDecimals(LoanLimit(loggedInCustomer))})");
                 parseSuccessAmount = decimal.TryParse(Console.ReadLine(), out userInputAmount);
-            } while (!parseSuccessAmount || userInputAmount < 0);
+            } while (!parseSuccessAmount || userInputAmount < 0 || userInputAmount > maxLoanAmount);
 
             Console.WriteLine($"Congratulations! You just took a loan of {userInputAmount} SEK which will cost {RoundTwoDecimals(ReturnMonthlyInterest(userinputKey, userInputAmount))} SEK per month.");
             Console.ReadKey();
             string accountNumber = GenerateAccountNumber();
 
-            loanAccounts.Add(new LoanAccount(accountName, accountNumber, loggedInCustomer.Username, "SEK", userInputAmount, Admin.interestDict[userinputKey], LoanLimit(loggedInCustomer)));
+            loanAccounts.Add(new LoanAccount(accountName, accountNumber, loggedInCustomer.Username, "SEK", userInputAmount, Admin.interestDict[userinputKey]));
         }
 
         internal static decimal LoanLimit(User loggedInCustomer)
@@ -110,6 +126,18 @@ namespace TeamGrapeBankApp
         internal static decimal ReturnMonthlyInterest(int Months, decimal Amount)
         {
             return (Amount * Admin.interestDict[Months] - Amount) / 12;
+        }
+
+        //Method to once a month update each loan account in list with new balance
+        internal static void UpdateLoanAccounts()
+        {
+            if (DateTime.Today.Day == 8)
+            {
+                foreach (LoanAccount item in loanAccounts)
+                {
+                    item.Balance = item.Balance * item.Interest;
+                }
+            }
         }
     }
 }
