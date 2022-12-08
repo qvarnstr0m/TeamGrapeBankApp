@@ -24,7 +24,7 @@ namespace TeamGrapeBankApp
         //Method to run timer in background
         internal static void StartTimer()
         {
-            var timer = new System.Timers.Timer(30000); //15 min = 900 000
+            var timer = new System.Timers.Timer(900000); //15 min = 900 000
             timer.Elapsed += OnTimedEvent;
             timer.Enabled = true;
         }
