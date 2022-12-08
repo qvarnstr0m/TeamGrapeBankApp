@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Internal;
 
 namespace TeamGrapeBankApp
 {
@@ -232,6 +233,103 @@ namespace TeamGrapeBankApp
             return Math.Round(input, 2).ToString("0.00");
         }
 
+
+        
+        public static void ExternalTransaction(string username)
+        {
+            Console.Clear();
+            Console.WriteLine("Bankaccounts");
+            List<BankAccount> userBankaccount = bankAccounts.FindAll(x => x.Owner == username);
+
+            foreach (BankAccount b in userBankaccount)
+            {
+                Console.WriteLine(b);
+            }
+            //Ask for input 
+            Console.WriteLine("What account do you want to move money from? ");
+            string AccountNumberFrom = Console.ReadLine();
+
+
+            if (!bankAccounts.Exists(x => x.AccountNumber == AccountNumberFrom))
+            {
+                Console.WriteLine("Account does not exsist! ");
+                Console.ReadKey();
+                return;
+
+            }
+
+            Console.Write("What account do you want to move the money to");
+            
+
+            string AccountNumberto = Console.ReadLine();
+            if (!bankAccounts.Exists(x => x.AccountNumber == AccountNumberto)
+            {
+                Console.WriteLine("Account does not exsist!");
+                Console.ReadKey();
+                return;
+
+            }
+
+
+            BankAccount AccountNumberto = bankAccounts.Find(x => x.AccountNumber == AccountNumberto);
+
+            bool parseSuccess;
+            decimal AmmountMove;
+            do
+            {
+
+                Console.WriteLine("How much money do you want to move? ");
+                parseSuccess = decimal.TryParse(Console.ReadLine(), out AmmountMove);
+            } while (!parseSuccess);
+
+
+
+            if (AmmountMove > AccountFrom.Balance)
+            {
+
+                Console.WriteLine("Not enough money on account.... ");
+                Console.ReadKey();
+                return; //Can call on method internalTrancactions again..
+            }
+
+
+            if (AccountFrom.Currency == AccountTo.Currency)
+            {
+                AccountFrom.Balance -= AmmountMove;
+                AccountTo.Balance += AmmountMove;
+                Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber}");
+            }
+            else
+            {
+                if (AccountFrom.Currency == "SEK")
+                {
+                    AccountFrom.Balance -= AmmountMove;
+                    AccountTo.Balance += AmmountMove / Admin.currencyDict[AccountTo.Currency];
+                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber} " +
+                        $"at the exchange rate 1 / {Admin.currencyDict[AccountTo.Currency]}");
+                }
+                else
+                {
+                    AccountFrom.Balance -= AmmountMove;
+                    AccountTo.Balance += AmmountMove * Admin.currencyDict[AccountFrom.Currency];
+                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber} " +
+                        $"at the exchange rate 1 * {Admin.currencyDict[AccountFrom.Currency]}");
+                }
+            }
+
+            foreach (BankAccount b in userBankaccount)
+            {
+                Console.WriteLine(b);
+            }
+            Console.WriteLine("Press any key to return to menu ");
+            Console.ReadKey();
+        }
+
+
+
     }
+
+
+}
          
 }
