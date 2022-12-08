@@ -74,8 +74,7 @@ namespace TeamGrapeBankApp
                     CustomerMenu(loggedInCustomer);
                     break;
                 case 6:
-                    Console.WriteLine("Log out");
-                    Console.WriteLine("Press a key to return to login menu");
+                    Console.WriteLine("\nYou are logged out. Press a key to return to login menu");
                     Console.ReadKey();
                     User.Login();
                     break;

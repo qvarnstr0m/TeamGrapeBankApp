@@ -9,28 +9,30 @@ namespace TeamGrapeBankApp
     {
         static void Main(string[] args)
         {
-            //Start background timer
-            StartTimer();
+            //Start daily background timer
+            StartDailyTimer();
             //Generates hardcoded users
             User.GenerateUsers();
             //Generates bankaccounts for users
             BankAccount.GenerateBankAccounts();
             //Generate saving accounts for users
             SavingsAccount.GenerateSavingsAccounts();
+            //Generate saving accounts for users
+            LoanAccount.GenerateLoanAccounts();
             //Run login method
             User.Login();
         }
 
-        //Method to run timer in background
-        internal static void StartTimer()
+        //Method to run 24h timer for daily background updates
+        internal static void StartDailyTimer()
         {
-            var timer = new System.Timers.Timer(900000); //15 min = 900 000
-            timer.Elapsed += OnTimedEvent;
+            var timer = new Timer(30000); //24h = 86400000 ms, 30 s = 3000 ms 
+            timer.Elapsed += RunInterestUpdates;
             timer.Enabled = true;
         }
 
-        //Method to run background checks
-        internal static void OnTimedEvent(object source, ElapsedEventArgs e)
+        //Method to run daily background updates
+        internal static void RunInterestUpdates(object source, ElapsedEventArgs e)
         {
             SavingsAccount.UpdateSavingsAccounts();
             LoanAccount.UpdateLoanAccounts();
