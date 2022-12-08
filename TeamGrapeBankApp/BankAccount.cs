@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Internal;
 
 namespace TeamGrapeBankApp
 {
@@ -212,12 +211,6 @@ namespace TeamGrapeBankApp
                 }
             }
 
-            foreach (BankAccount b in userBankaccount)
-            {
-                
-                Console.WriteLine(b);
-            }
-
             Console.WriteLine("Transaction went through.... ");
             Console.WriteLine("Press any key to return to menu ");
             Console.ReadKey();
@@ -261,28 +254,21 @@ namespace TeamGrapeBankApp
             Console.WriteLine("Bankaccounts");
             List<BankAccount> userBankaccount = bankAccounts.FindAll(x => x.Owner == username);
 
-            foreach (BankAccount b in userBankaccount)
+            for (int i = 0; i < userBankaccount.Count; i++)
             {
-                Console.WriteLine(b);
+                BankAccount bankAccount = userBankaccount[i];
+                Console.WriteLine("" + (i + 1) + "." + bankAccount);
             }
-            //Ask for input 
+
             Console.WriteLine("What account do you want to move money from? ");
-            string AccountNumberFrom = Console.ReadLine();
 
+            int AccountNumberFrom = GetUserAccountSelection(0, userBankaccount.Count, -1);
+            BankAccount AccountFrom = userBankaccount[AccountNumberFrom - 1];
 
-            if (!bankAccounts.Exists(x => x.AccountNumber == AccountNumberFrom))
-            {
-                Console.WriteLine("Account does not exsist! ");
-                Console.ReadKey();
-                return;
+            Console.Write("What account do you want to move the money to: ");
+            string AccountToInput = Console.ReadLine();
 
-            }
-
-            Console.Write("What account do you want to move the money to");
-            
-
-            string AccountNumberto = Console.ReadLine();
-            if (!bankAccounts.Exists(x => x.AccountNumber == AccountNumberto)
+            if (!bankAccounts.Exists(x => x.AccountNumber == AccountToInput))
             {
                 Console.WriteLine("Account does not exsist!");
                 Console.ReadKey();
@@ -291,7 +277,7 @@ namespace TeamGrapeBankApp
             }
 
 
-            BankAccount AccountNumberto = bankAccounts.Find(x => x.AccountNumber == AccountNumberto);
+            BankAccount AccountNumberto = bankAccounts.Find(x => x.AccountNumber == AccountToInput);
 
             bool parseSuccess;
             decimal AmmountMove;
@@ -300,7 +286,7 @@ namespace TeamGrapeBankApp
 
                 Console.WriteLine("How much money do you want to move? ");
                 parseSuccess = decimal.TryParse(Console.ReadLine(), out AmmountMove);
-            } while (!parseSuccess);
+            } while (!parseSuccess || AmmountMove < 0);
 
 
 
@@ -313,34 +299,30 @@ namespace TeamGrapeBankApp
             }
 
 
-            if (AccountFrom.Currency == AccountTo.Currency)
+            if (AccountFrom.Currency == AccountNumberto.Currency)
             {
                 AccountFrom.Balance -= AmmountMove;
-                AccountTo.Balance += AmmountMove;
-                Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber}");
+                AccountNumberto.Balance += AmmountMove;
+                Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountNumberto.AccountNumber}");
             }
             else
             {
                 if (AccountFrom.Currency == "SEK")
                 {
                     AccountFrom.Balance -= AmmountMove;
-                    AccountTo.Balance += AmmountMove / Admin.currencyDict[AccountTo.Currency];
-                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber} " +
-                        $"at the exchange rate 1 / {Admin.currencyDict[AccountTo.Currency]}");
+                    AccountNumberto.Balance += AmmountMove / Admin.currencyDict[AccountNumberto.Currency];
+                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountNumberto.AccountNumber} " +
+                        $"at the exchange rate 1 / {Admin.currencyDict[AccountNumberto.Currency]}");
                 }
                 else
                 {
                     AccountFrom.Balance -= AmmountMove;
-                    AccountTo.Balance += AmmountMove * Admin.currencyDict[AccountFrom.Currency];
-                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber} " +
+                    AccountNumberto.Balance += AmmountMove * Admin.currencyDict[AccountFrom.Currency];
+                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountNumberto.AccountNumber} " +
                         $"at the exchange rate 1 * {Admin.currencyDict[AccountFrom.Currency]}");
                 }
             }
 
-            foreach (BankAccount b in userBankaccount)
-            {
-                Console.WriteLine(b);
-            }
             Console.WriteLine("Press any key to return to menu ");
             Console.ReadKey();
         }
