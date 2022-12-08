@@ -144,7 +144,7 @@ namespace TeamGrapeBankApp
         //Method to once a month update each loan account in list with new balance
         internal static void UpdateLoanAccounts()
         {
-            if (DateTime.Today.Day == 8)
+            if (DateTime.Today.Day == 1)
             {
                 foreach (LoanAccount item in loanAccounts)
                 {
