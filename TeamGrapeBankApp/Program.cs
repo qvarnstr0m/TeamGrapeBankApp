@@ -26,7 +26,7 @@ namespace TeamGrapeBankApp
         //Method to run 24h timer for daily background updates
         internal static void StartDailyTimer()
         {
-            var timer = new Timer(30000); //24h = 86400000 ms, 30 s = 3000 ms 
+            var timer = new Timer(86400000); //24h = 86400000 ms, 30 s = 30000 ms 
             timer.Elapsed += RunInterestUpdates;
             timer.Enabled = true;
         }

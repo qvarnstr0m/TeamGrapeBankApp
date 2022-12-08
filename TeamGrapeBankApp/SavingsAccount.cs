@@ -99,7 +99,7 @@ namespace TeamGrapeBankApp
         //Method to once a month update each savingsaccount in list with new balance
         internal static void UpdateSavingsAccounts()
         {
-            if (DateTime.Today.Day == 8)
+            if (DateTime.Today.Day == 1)
             {
                 foreach (SavingsAccount item in savingsAccounts)
                 {
