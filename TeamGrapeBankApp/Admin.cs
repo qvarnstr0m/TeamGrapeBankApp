@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TeamGrapeBankApp
 {
@@ -29,6 +29,13 @@ namespace TeamGrapeBankApp
         {
             {12, 1.0150m },
             {6, 1.0050m }
+        };
+
+        //Dictionary to hold interest rate for loan accounts,
+        internal static Dictionary<int, decimal> interestDict = new Dictionary<int, decimal>()
+        {
+            {24, 1.0500m },
+            {36, 1.0600m},
         };
 
         //Admin menu method
@@ -136,7 +143,10 @@ namespace TeamGrapeBankApp
             Console.WriteLine("Available currencies:\n");
             foreach (var item in currencyDict)
             {
-                Console.WriteLine($"Currency: {item.Key}\nCurrent rate: {item.Value}\n");
+                if (item.Key != "SEK") //Hide SEK
+                {
+                    Console.WriteLine($"Currency: {item.Key}\nCurrent rate: {item.Value}\n");
+                }
             }
 
             string adminChoice;
@@ -144,13 +154,14 @@ namespace TeamGrapeBankApp
             {
                 Console.Write("Enter a currency to update or \"0\" to return to the main menu: ");
                 adminChoice = Console.ReadLine().ToUpper();
-            } while (adminChoice != "0" && !currencyDict.ContainsKey(adminChoice));
+            } while (adminChoice != "0" && !currencyDict.ContainsKey(adminChoice) || adminChoice.ToUpper() == "SEK");
 
             if (adminChoice == "0")
             {
                 Console.WriteLine("Press a key to return to main menu");
                 Console.ReadKey();
             }
+
             else
             {
                 bool parseSuccess;
@@ -160,6 +171,7 @@ namespace TeamGrapeBankApp
                     Console.Write($"Enter new rate for {adminChoice}: ");
                     parseSuccess = decimal.TryParse(Console.ReadLine(), out newRate);
                 } while (!parseSuccess);
+
                 currencyDict[adminChoice] = newRate;
                 Console.WriteLine($"New rate for {adminChoice}: {newRate}\nPress a key to return to main menu");
                 Console.ReadKey();

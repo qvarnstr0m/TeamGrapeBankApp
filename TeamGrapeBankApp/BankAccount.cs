@@ -10,11 +10,11 @@ namespace TeamGrapeBankApp
 {
     internal class BankAccount
     {
-        protected string AccountName { get; set; }
-        protected string AccountNumber { get; set; }
-        protected string Owner  { get; set; }
-        protected string Currency { get; set; }
-        protected decimal Balance { get; set; }
+        public string AccountName { get; set; }
+        public string AccountNumber { get; set; }
+        public string Owner  { get; set; }
+        public string Currency { get; set; }
+        public decimal Balance { get; set; }
 
         public static List<BankAccount> bankAccounts = new List<BankAccount>();
         public BankAccount(string accountName, string accountNumber, string owner, string currency, decimal balance)
@@ -68,10 +68,20 @@ namespace TeamGrapeBankApp
             List<SavingsAccount> userSavingsAccount = SavingsAccount.savingsAccounts.FindAll(x => x.Owner == username);
             if(userSavingsAccount.Count() > 0)
             {
-                Console.WriteLine("Savingsaccount");
+                Console.WriteLine("Savingsaccounts");
                 foreach(SavingsAccount h in userSavingsAccount)
                 {
                     Console.WriteLine(h);
+                }
+            }
+
+            List<LoanAccount> userLoanAccount = LoanAccount.loanAccounts.FindAll(x => x.Owner == username);
+            if (userLoanAccount.Count() > 0)
+            {
+                Console.WriteLine("Loan accounts");
+                foreach (LoanAccount j in userLoanAccount)
+                {
+                    Console.WriteLine(j);
                 }
             }
             Console.WriteLine("All accounts listed, please press a key to return to menu");
@@ -142,38 +152,24 @@ namespace TeamGrapeBankApp
             Console.Clear();
             Console.WriteLine("Bankaccounts");
             List<BankAccount> userBankaccount = bankAccounts.FindAll(x => x.Owner == username);
-
-            foreach (BankAccount b in userBankaccount)
-            {
-                Console.WriteLine(b);
-            }
-            //Ask for input 
-           Console.WriteLine("What account do you want to move money from? ");
-           string AccountNumberFrom = Console.ReadLine();
-          
             
-            if(!userBankaccount.Exists(x => x.AccountNumber == AccountNumberFrom))
+
+
+            for(int i=0; i < userBankaccount.Count; i++)
             {
-                Console.WriteLine("Account does not exsist! ");
-                Console.ReadKey();
-                return;
-
+                BankAccount bankAccount = userBankaccount[i];   
+                Console.WriteLine("" + (i+1) + "." + bankAccount);
             }
-            BankAccount AccountFrom = userBankaccount.Find(x => x.AccountNumber == AccountNumberFrom);
+          
+           Console.WriteLine("What account do you want to move money from? ");
 
-
+            int AccountNumberFrom = GetUserAccountSelection(0, userBankaccount.Count,-1);
+            BankAccount AccountFrom = userBankaccount[AccountNumberFrom-1];
 
             Console.WriteLine("What account do you want to move money to? ");
-            string AccountNumberTo =Console.ReadLine();
-
-            if (!userBankaccount.Exists(x => x.AccountNumber == AccountNumberTo))
-            {
-                Console.WriteLine("Account does not exsist! ");
-                Console.ReadKey();
-                return;
-
-            }
-            BankAccount AccountTo = userBankaccount.Find(x => x.AccountNumber == AccountNumberTo);
+            int AccountNumberTo = GetUserAccountSelection(0, userBankaccount.Count,AccountNumberFrom);
+            
+            BankAccount AccountTo = userBankaccount[AccountNumberTo - 1];
 
             bool parseSuccess;
             decimal AmmountMove;
@@ -181,13 +177,10 @@ namespace TeamGrapeBankApp
 
                 Console.WriteLine("How much money do you want to move? ");
                 parseSuccess = decimal.TryParse(Console.ReadLine(), out AmmountMove);
-            } while (!parseSuccess);
+            } while (!parseSuccess || AmmountMove < 0);
            
-
-
             if (AmmountMove > AccountFrom.Balance)
             {
-
                 Console.WriteLine("Not enough money on account.... ");
                 Console.ReadKey();
                 return; //Can call on method internalTrancactions again..
@@ -200,6 +193,7 @@ namespace TeamGrapeBankApp
                 AccountTo.Balance += AmmountMove;
                 Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber}");
             }
+
             else
             {
                 if (AccountFrom.Currency == "SEK")
@@ -220,18 +214,44 @@ namespace TeamGrapeBankApp
 
             foreach (BankAccount b in userBankaccount)
             {
+                
                 Console.WriteLine(b);
             }
+
+            Console.WriteLine("Transaction went through.... ");
             Console.WriteLine("Press any key to return to menu ");
             Console.ReadKey();
         }
 
+        private static int GetUserAccountSelection(int minValue, int maxValue, int previousValue)
+        {
+            bool ValidSelection = false;
+            int Selection = -1;
+
+            while(!ValidSelection)
+            {
+
+                  int.TryParse(Console.ReadLine(), out Selection);
+
+                    if(Selection > minValue && Selection <= maxValue && Selection != previousValue)
+                    {
+                        ValidSelection = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid Account Selection, Please try again ");
+                    }
+            }
+            return Selection;
+        }
+        
         //Method to show decimal numbers rounded to two decimals without changing the accual input
         internal static string RoundTwoDecimals(decimal input)
         {
             //decimal roundedDecimal = Math.Round(input, 2);
             return Math.Round(input, 2).ToString("0.00");
         }
+ 
 
 
         
@@ -332,4 +352,7 @@ namespace TeamGrapeBankApp
 
 }
          
-}
+
+   
+
+
