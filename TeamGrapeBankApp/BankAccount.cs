@@ -211,12 +211,6 @@ namespace TeamGrapeBankApp
                 }
             }
 
-            foreach (BankAccount b in userBankaccount)
-            {
-                
-                Console.WriteLine(b);
-            }
-
             Console.WriteLine("Transaction went through.... ");
             Console.WriteLine("Press any key to return to menu ");
             Console.ReadKey();
@@ -251,6 +245,7 @@ namespace TeamGrapeBankApp
             return Math.Round(input, 2).ToString("0.00");
         }
 
+
         //Method to convert and return interest decimal to percent format string
         internal static string ConvertInterestToString(decimal interest)
         {
@@ -283,5 +278,96 @@ namespace TeamGrapeBankApp
             }
             return null;
         }
+
+ 
+
+
+        
+        public static void ExternalTransaction(string username)
+        {
+            Console.Clear();
+            Console.WriteLine("Bankaccounts");
+            List<BankAccount> userBankaccount = bankAccounts.FindAll(x => x.Owner == username);
+
+            for (int i = 0; i < userBankaccount.Count; i++)
+            {
+                BankAccount bankAccount = userBankaccount[i];
+                Console.WriteLine("" + (i + 1) + "." + bankAccount);
+            }
+
+            Console.WriteLine("What account do you want to move money from? ");
+
+            int AccountNumberFrom = GetUserAccountSelection(0, userBankaccount.Count, -1);
+            BankAccount AccountFrom = userBankaccount[AccountNumberFrom - 1];
+
+            Console.Write("What account do you want to move the money to: ");
+            string AccountToInput = Console.ReadLine();
+
+            if (!bankAccounts.Exists(x => x.AccountNumber == AccountToInput))
+            {
+                Console.WriteLine("Account does not exsist!");
+                Console.ReadKey();
+                return;
+
+            }
+
+
+            BankAccount AccountNumberto = bankAccounts.Find(x => x.AccountNumber == AccountToInput);
+
+            bool parseSuccess;
+            decimal AmmountMove;
+            do
+            {
+
+                Console.WriteLine("How much money do you want to move? ");
+                parseSuccess = decimal.TryParse(Console.ReadLine(), out AmmountMove);
+            } while (!parseSuccess || AmmountMove < 0);
+
+
+
+            if (AmmountMove > AccountFrom.Balance)
+            {
+
+                Console.WriteLine("Not enough money on account.... ");
+                Console.ReadKey();
+                return; //Can call on method internalTrancactions again..
+            }
+
+
+            if (AccountFrom.Currency == AccountNumberto.Currency)
+            {
+                AccountFrom.Balance -= AmmountMove;
+                AccountNumberto.Balance += AmmountMove;
+                Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountNumberto.AccountNumber}");
+            }
+            else
+            {
+                if (AccountFrom.Currency == "SEK")
+                {
+                    AccountFrom.Balance -= AmmountMove;
+                    AccountNumberto.Balance += AmmountMove / Admin.currencyDict[AccountNumberto.Currency];
+                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountNumberto.AccountNumber} " +
+                        $"at the exchange rate 1 / {Admin.currencyDict[AccountNumberto.Currency]}");
+                }
+                else
+                {
+                    AccountFrom.Balance -= AmmountMove;
+                    AccountNumberto.Balance += AmmountMove * Admin.currencyDict[AccountFrom.Currency];
+                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountNumberto.AccountNumber} " +
+                        $"at the exchange rate 1 * {Admin.currencyDict[AccountFrom.Currency]}");
+                }
+            }
+
+            Console.WriteLine("Press any key to return to menu ");
+            Console.ReadKey();
+        }
+
     }
+
+
 }
+         
+
+   
+
+
