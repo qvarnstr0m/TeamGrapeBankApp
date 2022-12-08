@@ -10,9 +10,6 @@ namespace TeamGrapeBankApp
         //Properties
         public decimal Interest { get; set; }
 
-        //List to hold loan accounts
-        public static List<LoanAccount> loanAccounts = new List<LoanAccount>();
-
         //Constructor
         public LoanAccount(string accountName, string accountNumber, string owner, string currency, decimal balance, decimal interest) : base(accountName, accountNumber, owner, currency, balance)
         {
@@ -25,12 +22,15 @@ namespace TeamGrapeBankApp
             return $"AccountName: {AccountName}\nAccountnumber: {AccountNumber}\nBalance: -{RoundTwoDecimals(Balance)}{Currency}\n";
         }
 
+        //List to hold customers savings accounts
+        public static List<LoanAccount> loanAccounts = new List<LoanAccount>();
+
+        //Method to generate loan accounts and add to list (should change to database later)
         public static void GenerateLoanAccounts()
         {
-            //Hardcode loan accounts and add to list (should change to database later)
-            LoanAccount Acc1 = new LoanAccount("Morgage", "1234-1234", "billgates", "SEK", 1350000.345m, Admin.interestDict[24]);
-            LoanAccount Acc2 = new LoanAccount("Car loan", "5555-1234", "annasvensson", "SEK", 245000, Admin.interestDict[36]);
-            LoanAccount Acc3 = new LoanAccount("Loan to party", "5555-0000", "hermessaliba", "SEK", 7000.43m, Admin.interestDict[24]);
+            LoanAccount Acc1 = new LoanAccount("Morgage", "1234-1234", "billgates", "SEK", 1000000m, Admin.interestDict[24]);
+            LoanAccount Acc2 = new LoanAccount("Car loan", "5555-1234", "annasvensson", "SEK", 100000.12m, Admin.interestDict[24]);
+            LoanAccount Acc3 = new LoanAccount("Boat loan", "5555-0000", "hermessaliba", "SEK", 5000000m, Admin.interestDict[36]);
 
             loanAccounts.Add(Acc1);
             loanAccounts.Add(Acc2);
@@ -45,33 +45,43 @@ namespace TeamGrapeBankApp
             Console.WriteLine("Open a loan account\n");
 
             //Get user input for name of account
-            Console.WriteLine("Enter name of your new loan account");
+            Console.Write("Enter name of your new loan account: ");
             string accountName = Console.ReadLine();
 
             //Get user input for how many months to pay off loan
             foreach(var item in Admin.interestDict)
             {
-                Console.WriteLine($"Months to pay off: {item.Key} Interest rate: {item.Value}");
+                Console.WriteLine($"Months to pay off: {item.Key} Interest rate: {ConvertInterestToString(item.Value)}%");
             }
             bool parseSuccess;
             int userinputKey;
             do
             {
-                Console.WriteLine("How many months would you like to pay off loan");
+                Console.Write("Months to pay off loan: ");
                 parseSuccess = int.TryParse(Console.ReadLine(), out userinputKey);
             }
             while (!parseSuccess || !Admin.interestDict.ContainsKey(userinputKey));
 
             bool parseSuccessAmount = false;
-            decimal userInputAmount;
+            decimal userInputAmount = 0m;
             decimal maxLoanAmount = LoanLimit(loggedInCustomer);
-            do
+            if (maxLoanAmount > 0)
             {
-                Console.Write($"Enter a valid amount to loan in SEK: (Max amount: {RoundTwoDecimals(LoanLimit(loggedInCustomer))})");
-                parseSuccessAmount = decimal.TryParse(Console.ReadLine(), out userInputAmount);
-            } while (!parseSuccessAmount || userInputAmount < 0 || userInputAmount > maxLoanAmount);
+                do
+                {
+                    Console.Write($"Enter a valid amount to loan in SEK: (Max amount: {RoundTwoDecimals(maxLoanAmount)})");
+                    parseSuccessAmount = decimal.TryParse(Console.ReadLine(), out userInputAmount);
+                } while (!parseSuccessAmount || userInputAmount < 0 || userInputAmount > maxLoanAmount);
+            }
+            else
+            {
+                Console.WriteLine("You do not have enough balance to take out a loan at the moment, press a key to return to the main menu.");
+                Console.ReadKey();
+                Customer.CustomerMenu(loggedInCustomer);
+            }
 
-            Console.WriteLine($"Congratulations! You just took a loan of {userInputAmount} SEK which will cost {RoundTwoDecimals(ReturnMonthlyInterest(userinputKey, userInputAmount))} SEK per month.");
+
+            Console.WriteLine($"\nCongratulations! You just took a loan of {userInputAmount} SEK which will cost {RoundTwoDecimals(ReturnMonthlyInterest(userinputKey, userInputAmount))} SEK per month in interest.");
             Console.ReadKey();
             string accountNumber = GenerateAccountNumber();
 
@@ -113,14 +123,17 @@ namespace TeamGrapeBankApp
                 totalBalance += currentBalance;
             }
 
-            List<LoanAccount> LoggedInUserLoanAccount = LoanAccount.loanAccounts.FindAll(x => x.Owner == loggedInCustomer.Username);
+            //Max loan amount is 5 times total balance
+            totalBalance *= 5;
 
+            //Subtract possible current loans from total balance before returning max loan value
+            List<LoanAccount> LoggedInUserLoanAccount = LoanAccount.loanAccounts.FindAll(x => x.Owner == loggedInCustomer.Username);
             foreach (var item in LoggedInUserLoanAccount)
             {
                 totalBalance -= item.Balance;
             }
 
-            return totalBalance;
+            return totalBalance > 0 ? totalBalance : 0;
         }
 
         internal static decimal ReturnMonthlyInterest(int Months, decimal Amount)
@@ -131,7 +144,7 @@ namespace TeamGrapeBankApp
         //Method to once a month update each loan account in list with new balance
         internal static void UpdateLoanAccounts()
         {
-            if (DateTime.Today.Day == 1)
+            if (DateTime.Today.Day == 8)
             {
                 foreach (LoanAccount item in loanAccounts)
                 {

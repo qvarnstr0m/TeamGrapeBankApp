@@ -244,6 +244,41 @@ namespace TeamGrapeBankApp
             //decimal roundedDecimal = Math.Round(input, 2);
             return Math.Round(input, 2).ToString("0.00");
         }
+
+
+        //Method to convert and return interest decimal to percent format string
+        internal static string ConvertInterestToString(decimal interest)
+        {
+            string inputString = interest.ToString();
+            StringBuilder toReturn = new StringBuilder();
+            for (int i = 2; i < inputString.Length; i++)
+            {
+                if (inputString[i] != '0' && i == 2) //1.15 format
+                {
+                    toReturn.Append(inputString[i]);
+                    toReturn.Append(inputString[i + 1]);
+                    toReturn.Append(",");
+                    toReturn.Append(inputString.Substring(i + 2));
+                    return toReturn.ToString();
+                }
+                else if (inputString[i] != '0' && i == 3) //1.015 format
+                {
+                    toReturn.Append(inputString[i]);
+                    toReturn.Append(",");
+                    toReturn.Append(inputString.Substring(i + 1));
+                    return toReturn.ToString();
+                }
+                else if (inputString[i] != '0' && i > 3) //1.005 format
+                {
+                    toReturn.Append("0,");
+                    toReturn.Append(inputString[i]);
+                    toReturn.Append(inputString.Substring(i + 1));
+                    return toReturn.ToString();
+                }
+            }
+            return null;
+        }
+
  
 
 
@@ -326,8 +361,6 @@ namespace TeamGrapeBankApp
             Console.WriteLine("Press any key to return to menu ");
             Console.ReadKey();
         }
-
-
 
     }
 
