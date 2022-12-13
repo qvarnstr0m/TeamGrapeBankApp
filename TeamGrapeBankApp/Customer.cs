@@ -40,9 +40,10 @@ namespace TeamGrapeBankApp
             Console.WriteLine("2. Open a new bank account");
             Console.WriteLine("3. Internal transaction");
             Console.WriteLine("4. External transaction");
-            Console.WriteLine("5. Open a new savings account");
-            Console.WriteLine("6. Take loan");
-            Console.WriteLine("7. Log out");
+            Console.WriteLine("5. List bank account transactions");
+            Console.WriteLine("6. Open a new savings account");
+            Console.WriteLine("7. Take loan");
+            Console.WriteLine("8. Log out");
 
             bool parseSuccess;
             int userChoice;
@@ -64,7 +65,7 @@ namespace TeamGrapeBankApp
                     break;
                     
                 case 3:
-                    BankAccount.internalTransaction(loggedInCustomer.Username);
+                    BankAccount.InternalTransaction(loggedInCustomer.Username);
                     CustomerMenu(loggedInCustomer);
                     break;
                 case 4:
@@ -72,23 +73,30 @@ namespace TeamGrapeBankApp
                     CustomerMenu(loggedInCustomer);
                     break;
                 case 5:
-                    SavingsAccount.OpenNewSavingsAccount(loggedInCustomer);
+                    Transaction.ListTransactions(loggedInCustomer);
                     CustomerMenu(loggedInCustomer);
                     break;
                 case 6:
-                    LoanAccount.TakeLoan(loggedInCustomer);
+                    SavingsAccount.OpenNewSavingsAccount(loggedInCustomer);
                     CustomerMenu(loggedInCustomer);
                     break;
                 case 7:
-                    LogOutAnimation();
+                    LoanAccount.TakeLoan(loggedInCustomer);
+                    CustomerMenu(loggedInCustomer);
                     break;
-
+                case 8:
+                    LogOutAnimation();
+                    Console.WriteLine("\nYou are logged out. Press a key to return to login menu");
+                    Console.ReadKey();
+                    User.Login();
+                    break;
                 default:
                     Console.WriteLine("Invalid choice, enter a key to return to the menu");
                     Console.ReadKey();
                     CustomerMenu(loggedInCustomer);
                     break;
             }
+            
             static void LogginOutSound()
             {
                 int C = 528;
@@ -99,12 +107,8 @@ namespace TeamGrapeBankApp
                 int A = 330;
                 int B = 297;
                 int C2 = 264;
-
-
                 int half = 1000 / 2;
                 int quarter = 1000 / 4;
-
-
 
                 Console.Beep(C, quarter);
                 Console.Beep(D, quarter);
@@ -115,17 +119,13 @@ namespace TeamGrapeBankApp
                 Console.Beep(B, quarter);
                 Console.Beep(C2, half);
                 Thread.Sleep(quarter);
-
-
             }
-
 
             static void LogOutAnimation()
             {
                 string bufferDots = "......";
                 Console.WriteLine("You are being logged out ");
                 for (int i = 0; i < bufferDots.Length; i++)
-
                 {
                     Thread.Sleep(300);
                     Console.Write(bufferDots[i]);
@@ -133,10 +133,7 @@ namespace TeamGrapeBankApp
                 LogginOutSound();
                 Console.WriteLine(" \nPress a key to return to login menu ");
                 Console.ReadKey();
-
                 User.Login();
-
-
             }
         }
         
