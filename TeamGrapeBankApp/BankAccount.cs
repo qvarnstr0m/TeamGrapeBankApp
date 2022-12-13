@@ -144,9 +144,8 @@ namespace TeamGrapeBankApp
             return newAccountNumber;
         }
 
-        public static void internalTransaction(string username)
+        public static void InternalTransaction(string username)
         {
-
             //Write out the accounts
             Console.Clear();
             Console.WriteLine("Bankaccounts");
@@ -177,42 +176,11 @@ namespace TeamGrapeBankApp
                 Console.WriteLine("How much money do you want to move? ");
                 parseSuccess = decimal.TryParse(Console.ReadLine(), out AmmountMove);
             } while (!parseSuccess || AmmountMove < 0);
-           
-            if (AmmountMove > AccountFrom.Balance)
-            {
-                Console.WriteLine("Not enough money on account.... ");
-                Console.ReadKey();
-                return; //Can call on method internalTrancactions again..
-            }
 
-            //Logic to handle same and different currency transfers
-            if (AccountFrom.Currency == AccountTo.Currency)
-            {
-                AccountFrom.Balance -= AmmountMove;
-                AccountTo.Balance += AmmountMove;
-                Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber}");
-            }
+            //Find logged in user object by username for use in ProcessTransaction
+            User ownerObject = User.userList.Find(x => x.Username == username);
 
-            else
-            {
-                if (AccountFrom.Currency == "SEK")
-                {
-                    AccountFrom.Balance -= AmmountMove;
-                    AccountTo.Balance += AmmountMove / Admin.currencyDict[AccountTo.Currency];
-                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber} " +
-                        $"at the exchange rate 1 / {Admin.currencyDict[AccountTo.Currency]}");
-                }
-                else
-                {
-                    AccountFrom.Balance -= AmmountMove;
-                    AccountTo.Balance += AmmountMove * Admin.currencyDict[AccountFrom.Currency];
-                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountTo.AccountNumber} " +
-                        $"at the exchange rate 1 * {Admin.currencyDict[AccountFrom.Currency]}");
-                }
-            }
-
-            Console.WriteLine("Transaction went through.... ");
-            Console.WriteLine("Press any key to return to menu ");
+            Console.WriteLine(Transaction.ProcessTransaction(AccountFrom, AccountTo, ownerObject, ownerObject, AmmountMove));
             Console.ReadKey();
         }
 
@@ -244,7 +212,6 @@ namespace TeamGrapeBankApp
             //decimal roundedDecimal = Math.Round(input, 2);
             return Math.Round(input, 2).ToString("0.00");
         }
-
 
         //Method to convert and return interest decimal to percent format string
         internal static string ConvertInterestToString(decimal interest)
@@ -279,10 +246,6 @@ namespace TeamGrapeBankApp
             return null;
         }
 
- 
-
-
-        
         public static void ExternalTransaction(string username)
         {
             Console.Clear();
@@ -311,8 +274,8 @@ namespace TeamGrapeBankApp
 
             }
 
-
-            BankAccount AccountNumberto = bankAccounts.Find(x => x.AccountNumber == AccountToInput);
+            
+            BankAccount Accountto = bankAccounts.Find(x => x.AccountNumber == AccountToInput);
 
             bool parseSuccess;
             decimal AmmountMove;
@@ -323,48 +286,14 @@ namespace TeamGrapeBankApp
                 parseSuccess = decimal.TryParse(Console.ReadLine(), out AmmountMove);
             } while (!parseSuccess || AmmountMove < 0);
 
+            //Find logged in user and owner to account objects by usernames for use in ProcessTransaction
+            User fromOwnerObject = User.userList.Find(x => x.Username == username);
+            User toOwnerObject = User.userList.Find(x => x.Username == Accountto.Owner);
 
-
-            if (AmmountMove > AccountFrom.Balance)
-            {
-
-                Console.WriteLine("Not enough money on account.... ");
-                Console.ReadKey();
-                return; //Can call on method internalTrancactions again..
-            }
-
-
-            if (AccountFrom.Currency == AccountNumberto.Currency)
-            {
-                AccountFrom.Balance -= AmmountMove;
-                AccountNumberto.Balance += AmmountMove;
-                Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountNumberto.AccountNumber}");
-            }
-            else
-            {
-                if (AccountFrom.Currency == "SEK")
-                {
-                    AccountFrom.Balance -= AmmountMove;
-                    AccountNumberto.Balance += AmmountMove / Admin.currencyDict[AccountNumberto.Currency];
-                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountNumberto.AccountNumber} " +
-                        $"at the exchange rate 1 / {Admin.currencyDict[AccountNumberto.Currency]}");
-                }
-                else
-                {
-                    AccountFrom.Balance -= AmmountMove;
-                    AccountNumberto.Balance += AmmountMove * Admin.currencyDict[AccountFrom.Currency];
-                    Console.WriteLine($"{AmmountMove} {AccountFrom.Currency} transferred from account {AccountFrom.AccountNumber} to account {AccountNumberto.AccountNumber} " +
-                        $"at the exchange rate 1 * {Admin.currencyDict[AccountFrom.Currency]}");
-                }
-            }
-
-            Console.WriteLine("Press any key to return to menu ");
+            Console.WriteLine(Transaction.ProcessTransaction(AccountFrom, Accountto, fromOwnerObject, toOwnerObject, AmmountMove));
             Console.ReadKey();
         }
-
     }
-
-
 }
          
 
