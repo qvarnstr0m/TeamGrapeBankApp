@@ -20,18 +20,18 @@ Press any key to continue and than you will see this:
 
 <img width="400" alt="bild2" src="https://user-images.githubusercontent.com/114058034/207590289-2c981161-274f-4e17-82a4-9c3e8e2d4442.png">
 
-In the project you can be looged in in to ways:
-One of them is by choosing one of the five bank users you can log in in the bank and than the menu of choices will be shown up:
+In the project you can log in two ways:
+One of them is by choosing one of the five bank users you can log in to the bank with and then the menu of choices will be shown:
 
 <img width="290" alt="bild3" src="https://user-images.githubusercontent.com/114058034/207592195-67e0ebad-3c55-49b9-83df-ddea702d0e0a.png">
 
-You can choose one by clicking on the corresponding number and follow the steps that you will find in each of the choices.
+You can choose one by enter the corresponding number and follow the steps that you will find in each of the choices.
 
-The other way to log in is to log in as the admin and the other menu will be shown up: 
+The other way to log in is to log in as the admin and the other menu will be shown: 
 
 <img width="277" alt="bild4" src="https://user-images.githubusercontent.com/114058034/207592323-4eb7e2a2-970d-4e30-8fa6-fe9c0c1a35a6.png">
 
-You can choose one by clickning on the corresponding number and follow the steps that you vill find in each of the choices.
+You can choose one by entering on the corresponding number and follow the steps that you will find in each of the choices.
 
 By clicking on option 8 (as user) or 3 (as admin) you will be logged out.
 
