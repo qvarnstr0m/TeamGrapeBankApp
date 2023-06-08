@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace TeamGrapeBankApp
 {
-    internal class Admin : User
+    public class Admin : User
     {
         //Constructor
         public Admin(int id, string username, string password, string firstname, string lastname, bool lockedOut) : base(id, username, password, firstname, lastname, lockedOut)
@@ -186,7 +186,7 @@ namespace TeamGrapeBankApp
         }
 
         //Method for admin to set current exchange rates between different currencies
-        private static void SetExchangeRates()
+        public static void SetExchangeRates()
         {
             Console.Clear();
             Console.WriteLine("Available currencies:\n");

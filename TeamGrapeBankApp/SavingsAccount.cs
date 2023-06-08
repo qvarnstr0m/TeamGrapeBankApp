@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TeamGrapeBankApp
 {
-    internal class SavingsAccount : BankAccount
+    public class SavingsAccount : BankAccount
     {
         public decimal Interest { get; set; }
 
@@ -34,7 +34,7 @@ namespace TeamGrapeBankApp
         }
 
         //Method to open new savings account
-        internal static void OpenNewSavingsAccount(User loggedInCustomer)
+        public static void OpenNewSavingsAccount(User loggedInCustomer)
         {
             Console.Clear();
 
@@ -91,7 +91,7 @@ namespace TeamGrapeBankApp
         }
 
         //Method to calculate and return yearly return on saved capital
-        internal static decimal ReturnYearlyInterest(int months, decimal amount)
+        public static decimal ReturnYearlyInterest(int months, decimal amount)
         {
             return amount * Admin.savingsDict[months] - amount;
         }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace TeamGrapeBankApp
 {
-    internal class BankAccount
+    public class BankAccount
     {
         public string AccountName { get; set; }
         public string AccountNumber { get; set; }

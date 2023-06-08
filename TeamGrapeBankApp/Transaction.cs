@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TeamGrapeBankApp
 {
-    internal class Transaction
+    public class Transaction
     {
         //Properties
         public string FromAccount { get; set; }
@@ -40,7 +40,7 @@ namespace TeamGrapeBankApp
         }
 
         //Method to process a bank account transaction
-        internal static string ProcessTransaction(BankAccount fromAccount, BankAccount toAccount, User fromOwner, User toOwner, decimal amount)
+        public static string ProcessTransaction(BankAccount fromAccount, BankAccount toAccount, User fromOwner, User toOwner, decimal amount)
         {
             string returnMessage = null;
             DateTime createdTime = DateTime.Now;

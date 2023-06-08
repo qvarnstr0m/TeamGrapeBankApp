@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace TeamGrapeBankApp
 {
-    internal class Customer : User
+    public class Customer : User
     {
         //Properties
         public string Adress { get; set; }

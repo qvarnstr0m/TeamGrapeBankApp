@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace TeamGrapeBankApp
 {
-    internal abstract class User
+    public abstract class User
     {
         //Properties
         public int Id { get; set; }
